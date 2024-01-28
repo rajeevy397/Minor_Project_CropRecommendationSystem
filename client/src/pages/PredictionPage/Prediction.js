@@ -3,6 +3,9 @@ import './Prediction.css';
 import Products from './Products.json';
 import Navbar from '../../components/Navbar/Navbar';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 function Prediction() {
   // let navigate=useNavigate();
   const [N, setN] = useState('');
@@ -16,6 +19,29 @@ function Prediction() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (
+      N < 0 ||
+      N > 140 ||
+      P < 5 ||
+      P > 145 ||
+      K < 5 ||
+      K > 205 ||
+      temperature < 8.825674745 ||
+      temperature > 43.67549305 ||
+      humidity < 14.25803981 ||
+      humidity > 99.98187601 ||
+      ph < 3.504752314 ||
+      ph > 9.93509073 ||
+      rainfall < 20.21126747 ||
+      rainfall > 298.5601175
+    ) {
+      toast.error('Invalid input values.', {
+        autoClose: 1000,
+      });
+      return;
+    }
+
     try {
       const response = await fetch('http://localhost:5000/predict', {
         method: 'POST',
@@ -64,10 +90,10 @@ function Prediction() {
             <form onSubmit={handleSubmit}>
               <br></br>
               <span>Fill Appropriate Data to get better result</span>
+              <br />
+              <span>Ranges given according to dataset trained on :)</span>
               <br></br>
-              <label className="first">
-                Average Ratio of Nitrogen in the Soil : 50.55
-              </label>
+              <label className="first">Nitrogen Range: 0-140 eg. 50.55</label>
               <input
                 type="text"
                 className="user"
@@ -76,7 +102,7 @@ function Prediction() {
                 onChange={(e) => setN(e.target.value)}
               />
 
-              <label>Average Ratio of Phosphorous in the Soil : 53.36</label>
+              <label>Phosphorous Range: 5-145 eg. 53.36</label>
               <input
                 type="text"
                 className="user"
@@ -85,7 +111,7 @@ function Prediction() {
                 onChange={(e) => setP(e.target.value)}
               />
 
-              <label>Average Ratio of Potassium in the Soil : 48.15</label>
+              <label>Potassium Range: 5-205 eg. 48.15</label>
               <input
                 type="text"
                 className="user"
@@ -94,16 +120,18 @@ function Prediction() {
                 onChange={(e) => setK(e.target.value)}
               />
 
-              <label>Average Tempature in Celsius : 25.62</label>
+              <label>Tempature Range:8.8-43.6 eg. 25.62</label>
               <input
                 type="text"
                 className="user"
                 placeholder="Temperature"
                 value={temperature}
                 onChange={(e) => setTemperature(e.target.value)}
+                min={8.825674745}
+                max={43.67549305}
               />
 
-              <label>Average Relative Humidity in % : 71.48</label>
+              <label>Humidity Range %:14.2-99.9 eg. 71.48</label>
               <input
                 type="text"
                 className="user"
@@ -112,7 +140,7 @@ function Prediction() {
                 onChange={(e) => setHumidity(e.target.value)}
               />
 
-              <label>Average PH Value of the soil : 6.47</label>
+              <label>PH Range:3.5-9.9 eg. 6.47</label>
               <input
                 type="text"
                 className="user"
@@ -121,7 +149,7 @@ function Prediction() {
                 onChange={(e) => setPh(e.target.value)}
               />
 
-              <label>Average Rainfall in mm: 103.46</label>
+              <label>Rainfall Range:20.2-298.5 eg. 103.46</label>
               <input
                 type="text"
                 className="user"
